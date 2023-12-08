@@ -1,0 +1,7 @@
+# Node.js 백엔드 개발자 되기
+
+### chapter1
+Node.js 서버 생성 및 사용, K6 부하 테스트 사용
+
+### chapter2
+Node.js 서버 라우터 사용 및 Express 프레임워크 사용
