@@ -44,7 +44,7 @@ app.post('/person', async (req, res) => {
 app.put('/person/:email', async (req, res) => {
   const email = req.params.email;
   const updatedData = req.body;
-  const person = PersonModel.findOneAndUpdate(
+  const person = await PersonModel.findOneAndUpdate(
     { email },
     { $set: updatedData },
     { new: true }
