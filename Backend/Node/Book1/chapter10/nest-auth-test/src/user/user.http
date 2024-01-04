@@ -1,0 +1,35 @@
+### CreateUser 유저 생성
+POST http://localhost:3000/user/create
+Content-Type: application/json
+
+{
+    "username": "kim",
+    "password": "test1234",
+    "email": "kim@apple.com"
+}
+
+### GetUer 유저 정보 찾기
+GET http://localhost:3000/user/getUser/kim@apple.com
+
+### UpdateUser 유저 정보 업데이트
+PUT http://localhost:3000/user/update/kim@apple.com
+Content-Type: application/json
+
+{
+    "email": "kim@apple.com",
+    "username": "lee",
+    "password": "test12345"
+}
+
+### DeleteUser 유저 삭제
+DELETE http://localhost:3000/user/delete/kim@apple.com
+
+### 잘못된 이메일 입력
+POST http://localhost:3000/user/create
+Content-Type: application/json
+
+{
+    "username": "lee",
+    "password": "test1234",
+    "email": "lee-apple"
+}
