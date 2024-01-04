@@ -17,3 +17,6 @@ NestJS 시작
 
 ### chapter9
 NestJS 환경변수 설정
+
+### chapter10
+회원가입과 인증하기
