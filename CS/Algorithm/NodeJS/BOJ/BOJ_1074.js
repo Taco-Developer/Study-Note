@@ -7,7 +7,7 @@ const [N, r, c] = require('fs')
   .map((num) => +num);
 
 // 찾으려는 위치의 점수를 찾는 함수
-// sr: 시작 행, sc: 시작 열, tr: 목표 행, rc: 목표 열, 현재 사각형 길이, order: 순서
+// sr: 시작 행, sc: 시작 열, tr: 목표 행, tc: 목표 열, 현재 사각형 길이, order: 순서
 function checkPosition(sr, sc, tr, tc, length, order) {
   // 길이가 2인 경우가 가장 작은 정사각형인 경우이므로 이때 순서를 확인
   if (length === 2) {
