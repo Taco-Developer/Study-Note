@@ -19,6 +19,9 @@ function solve(input) {
   // dp => 0 ~ H 높이까지 만들 수 있는 경우의 수
   let dp = Array(H + 1).fill(0);
   // 1번 학생 입력
+  // 블럭을 쌓지 않는 경우
+  dp[0] = 1;
+  // 쌓는 경우
   students[0].forEach((block) => {
     if (block > H) return;
     dp[block] = 1;
@@ -28,14 +31,12 @@ function solve(input) {
     // 현재 학생이 블록을 쌓지 않는 경우 저장
     const tmp = [...dp];
 
-    // 블록 쌓기
+    // 블록 쌓는 경우
     students[i].forEach((block) => {
       if (block > H) return;
-      // 이전에 아무도 블록을 안 쌓은 경우
-      tmp[block]++;
-
+ 
       // 이전에 쌓은 블록에 이어서 쌓기
-      for (let prevHeight = 1; prevHeight < H; prevHeight++) {
+      for (let prevHeight = 0; prevHeight < H; prevHeight++) {
         // 목표 높이 초과
         if (block + prevHeight > H) break;
         // 이전에 현재 높이까지 쌓지 않은 경우 패스
