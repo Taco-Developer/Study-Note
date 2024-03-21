@@ -1,20 +1,27 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
-const cookieSession = require('cookie-session');
+// import { ValidationPipe } from '@nestjs/common';
+// import { setupApp } from './setup-app';
+// const cookieSession = require('cookie-session');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(
-    cookieSession({
-      keys: ['secret'],
-    }),
-  );
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-    }),
-  );
+
+  // 직접 설정
+  // app.use(
+  //   cookieSession({
+  //     keys: ['secret'],
+  //   }),
+  // );
+  // app.useGlobalPipes(
+  //   new ValidationPipe({
+  //     whitelist: true,
+  //   }),
+  // );
+
+  // 헬퍼 함수 사용
+  // setupApp(app);
+
   await app.listen(3000);
 }
 bootstrap();
