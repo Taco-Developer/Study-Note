@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -11,11 +12,31 @@ const cookieSession = require('cookie-session');
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'db.sqlite',
-      entities: [User, Report],
-      synchronize: true,
+    // 어떤 환경 변수 파일을 읽을 것인지 지정
+    ConfigModule.forRoot({
+      // 나머지 애플리케이션 영역 전체에서 환경 변수 사용할 수 있도록 설정
+      isGlobal: true,
+      // 읽을 환경 변수 파일 경로
+      // NODE_ENV는 package.json의 script로 설정
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+    }),
+    // TypeOrmModule.forRoot({
+    //   type: 'sqlite',
+    //   database: 'db.sqlite',
+    //   entities: [User, Report],
+    //   synchronize: true,
+    // }),
+    TypeOrmModule.forRootAsync({
+      // 의존성 주입 시스템에 지시 
+      // => TypeOrmModule을 설정하는 동안 ConfigService 인스턴스에 접근
+      inject: [ConfigService],
+      // ConfigService에서 환경 변수를 읽고 사용할 데이터베이스 옵션 반환
+      useFactory: (config: ConfigService) => ({
+        type: 'sqlite',
+        database: config.get<string>('DB_NAME'),
+        entities: [User, Report],
+        synchronize: true,
+      }),
     }),
     UsersModule,
     ReportsModule,
