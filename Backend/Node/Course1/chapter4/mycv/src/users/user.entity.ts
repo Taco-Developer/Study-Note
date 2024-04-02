@@ -1,7 +1,9 @@
+import { Report } from 'src/reports/report.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
+  OneToMany,
   AfterInsert,
   AfterRemove,
   AfterUpdate,
@@ -21,6 +23,10 @@ export class User {
   // @Exclude는 해당 속성을 포함하지 말라는 의미
   // @Exclude()
   password: string;
+
+  // OneToMany는 데이터베이스에 변경을 초래하지 않음
+  @OneToMany(() => Report, (report) => report.user)
+  reports: Report[];
 
   @AfterInsert()
   logInsert() {
