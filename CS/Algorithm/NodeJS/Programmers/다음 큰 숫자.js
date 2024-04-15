@@ -12,7 +12,7 @@ function solution(n) {
   }
 
   const nOneCnt = getOneCnt(n);
-  for (let i = n + 1; i < n * 2; i++) {
+  for (let i = n + 1; i <= n * 2; i++) {
     const oneCnt = getOneCnt(i);
     if (oneCnt === nOneCnt) return i;
   }
