@@ -8,6 +8,8 @@ import { UsersModule } from './users/users.module';
 import { ReportsModule } from './reports/reports.module';
 import { User } from './users/user.entity';
 import { Report } from './reports/report.entity';
+import { dataSourceOptions } from './ormconfig';
+import { DataSource } from 'typeorm';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -20,24 +22,21 @@ const cookieSession = require('cookie-session');
       // NODE_ENV는 package.json의 script로 설정
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
-    // TypeOrmModule.forRoot({
-    //   type: 'sqlite',
-    //   database: 'db.sqlite',
-    //   entities: [User, Report],
-    //   synchronize: true,
+    // TypeOrmModule.forRootAsync({
+    //   // 의존성 주입 시스템에 지시
+    //   // => TypeOrmModule을 설정하는 동안 ConfigService 인스턴스에 접근
+    //   inject: [ConfigService],
+    //   // ConfigService에서 환경 변수를 읽고 사용할 데이터베이스 옵션 반환
+    //   useFactory: (config: ConfigService) => ({
+    //     type: 'sqlite',
+    //     database: config.get<string>('DB_NAME'),
+    //     entities: [User, Report],
+    //     synchronize: true,
+    //     migrationsRun: false,
+    //     migrations: [],
+    //   }),
     // }),
-    TypeOrmModule.forRootAsync({
-      // 의존성 주입 시스템에 지시 
-      // => TypeOrmModule을 설정하는 동안 ConfigService 인스턴스에 접근
-      inject: [ConfigService],
-      // ConfigService에서 환경 변수를 읽고 사용할 데이터베이스 옵션 반환
-      useFactory: (config: ConfigService) => ({
-        type: 'sqlite',
-        database: config.get<string>('DB_NAME'),
-        entities: [User, Report],
-        synchronize: true,
-      }),
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
     UsersModule,
     ReportsModule,
   ],
@@ -54,6 +53,11 @@ const cookieSession = require('cookie-session');
   ],
 })
 export class AppModule {
+  constructor(
+    private configService: ConfigService,
+    private dataSource: DataSource,
+  ) {}
+
   // configure 함수는 애플리케이션이 들어오는 트래픽을 수신할 때 자동으로 호출됨
   // => 요청이 들어올 때마다 실행될 미들웨어 설정 가능
   configure(consumer: MiddlewareConsumer) {
@@ -61,7 +65,7 @@ export class AppModule {
     consumer
       .apply(
         cookieSession({
-          keys: ['secret'],
+          keys: [this.configService.get('COOKIE_KEY')],
         }),
       )
       .forRoutes('*'); // 모든 요청에서 미들웨어 사용 => 전역 미들웨어;
